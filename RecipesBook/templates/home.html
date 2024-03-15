@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recipes Book</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='home.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='header.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='footer.css') }}">
+</head>
+<body>
+    {% include 'header.html' %}
+
+    <div class="content">
+        <h1>Welcome to Recipes Book</h1>
+        {% if username %}
+            <p>Hello, {{ username }}!</p>
+        {% else %}
+            <p>Discover and share delicious recipes!</p>
+        {% endif %}
+    </div>
+
+    <main>
+        {% for recipe in recipes %}
+        <div class="card">
+            <p><strong>Recipe ID:</strong> {{ recipe['recipe_id'] }}</p>
+            <p><strong>Title:</strong> {{ recipe['title'] }}</p>
+        </div>
+        {% endfor %}
+    </main>
+    
+    {% include 'footer.html' %}
+</body>
+</html>
