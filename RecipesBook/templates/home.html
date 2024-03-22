@@ -15,6 +15,9 @@
         <h1>Welcome to Recipes Book</h1>
         {% if username %}
             <p>Hello, {{ username }}!</p>
+            {% if message %}
+                <p>{{ message }}</p>
+            {% endif %}
         {% else %}
             <p>Discover and share delicious recipes!</p>
         {% endif %}
