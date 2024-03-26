@@ -19,8 +19,24 @@ mysql = MySQL(app)
 app.secret_key = app.config['SECRET_KEY']
 bcrypt = Bcrypt(app)
 
+def delete_old_unconfirmed_accounts():
+    try:
+        connection = mysql.connection
+        cursor = connection.cursor()
+
+        cutoff_date = datetime.datetime.now() - datetime.timedelta(weeks=4)
+
+        query = "DELETE FROM users WHERE status = 'Unconfirmed' AND confirmation_sent_at < %s"
+        cursor.execute(query, (cutoff_date,))
+
+        connection.commit()
+        cursor.close()
+    except Exception as e:
+        print("Error deleting old unconfirmed accounts:", e)
+
 @app.route('/', methods=['GET', 'POST'])
 def home():
+    delete_old_unconfirmed_accounts()
     print("Home route accessed")
     if 'username' in session:
         cur = mysql.connection.cursor()
@@ -52,6 +68,10 @@ def recipes():
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
+    if 'username' in session:
+        # If user is already logged in, redirect to home page
+        return redirect(url_for('home'))
+
     if request.method == 'POST':
         username = request.form['username']
         email = request.form['email']
@@ -121,8 +141,10 @@ def send_confirmation_email(email, token):
     body = """
     Thank you for registering with RecipesBook!
 
-    Please click the following link to confirm your email address:
+    Please click the following link to confirm your account:
     http://localhost:5000/confirm_email?token={}
+
+    Please note that if your account remains unconfirmed for 4 weeks, it will be automatically deleted from our system for security purposes.
     """.format(token)
 
     sender = "vazodevelopment@gmail.com"
@@ -171,6 +193,9 @@ def confirm_email():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    if 'username' in session:
+        return redirect(url_for('home'))
+
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
@@ -193,7 +218,6 @@ def login():
 def logout():
     session.clear()
     return redirect(url_for('home'))
-
 
 if __name__ == '__main__':
     app.run(debug=True)
