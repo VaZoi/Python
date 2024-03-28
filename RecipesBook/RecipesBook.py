@@ -69,7 +69,6 @@ def recipes():
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if 'username' in session:
-        # If user is already logged in, redirect to home page
         return redirect(url_for('home'))
 
     if request.method == 'POST':
