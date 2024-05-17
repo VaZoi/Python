@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Weather App</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='weather.css') }}">
+</head>
+<body>
+    <div class="main">
+        <h2>Weather in {{ city }}, {{ country }}</h2>
+        <p>Current Time: {{ current_time_local }}</p>
+        <p>Temperature: {{ temperature }}°C</p>
+        <p>Feels Like: {{ feels_like }}°C</p>
+        <p>Minimum Temperature: {{ temp_min }}°C</p>
+        <p>Maximum Temperature: {{ temp_max }}°C</p>
+        <p>Pressure: {{ pressure }} hPa</p>
+        <p>Humidity: {{ humidity }}%</p>
+        <p>Visibility: {{ visibility }} km</p>
+        <p>Wind Speed: {{ wind_speed }} m/s</p>
+        <p>Wind Degree: {{ wind_deg }}°</p>
+        <p>Cloudiness: {{ clouds }}%</p>
+        <p>Sunrise: {{ sunrise | datetimefromtimestamp }}</p>
+        <p>Sunset: {{ sunset | datetimefromtimestamp }}</p>
+        <p>Coordinates: Latitude {{ coordinates['lat'] }}, Longitude {{ coordinates['lon'] }}</p>
+        <p>Timezone: {{ timezone }}</p>
+        <p>Weather Description: {{ weather_description }}</p>
+        <img src="http://openweathermap.org/img/wn/{{ weather_icon }}.png" alt="Weather Icon">
+    </div>
+    <a href="{{ url_for('index') }}" class="return-btn">Return to Home</a>
+</body>
+</html>
